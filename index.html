@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Utilities & Web Tools Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: '#3b82f6', 600: '#2563eb' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 bg-blue-600/20 text-blue-400 rounded-lg border border-blue-500/30 font-bold">
+          🛠️ DevTools
+        </div>
+        <span class="font-semibold text-lg tracking-wide">Web Developer Utilities Hub</span>
+      </div>
+      <div class="flex items-center space-x-2 text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700">
+        <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span> Client-Side Only (100% Secure)
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+
+    <!-- Interactive Tools Section -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Tool 1: Base64 Encoder / Decoder -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+        <div>
+          <h2 class="text-base font-bold text-blue-400 flex items-center gap-2 mb-3">
+            <span>🔑 Base64 Encode / Decode</span>
+          </h2>
+          <textarea id="base64Input" placeholder="วางข้อความที่นี่..." class="w-full h-24 bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-blue-500 resize-none mb-3"></textarea>
+          <div class="flex gap-2 mb-3">
+            <button onclick="encodeBase64()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-2 rounded-lg transition">Encode</button>
+            <button onclick="decodeBase64()" class="flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold py-2 rounded-lg transition">Decode</button>
+          </div>
+          <textarea id="base64Output" readonly placeholder="ผลลัพธ์จะปรากฏที่นี่..." class="w-full h-24 bg-slate-950/60 border border-slate-800/80 rounded-lg p-3 text-sm text-emerald-400 font-mono resize-none focus:outline-none"></textarea>
+        </div>
+        <button onclick="copyToClipboard('base64Output')" class="mt-3 w-full bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 py-1.5 rounded-lg border border-slate-700">📋 Copy Result</button>
+      </div>
+
+      <!-- Tool 2: Password Generator -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+        <div>
+          <h2 class="text-base font-bold text-emerald-400 flex items-center gap-2 mb-3">
+            <span>🎲 Random Password Generator</span>
+          </h2>
+          <div class="space-y-3 mb-3">
+            <div>
+              <div class="flex justify-between text-xs text-slate-400 mb-1">
+                <span>ความยาวรหัสผ่าน:</span>
+                <span id="passLengthVal" class="font-bold text-emerald-400">16</span>
+              </div>
+              <input type="range" id="passLength" min="8" max="64" value="16" oninput="document.getElementById('passLengthVal').innerText = this.value; generatePassword();" class="w-full accent-emerald-500 bg-slate-950">
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
+              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded border border-slate-800 cursor-pointer">
+                <input type="checkbox" id="incUpper" checked onchange="generatePassword()" class="accent-emerald-500"> พิมพ์ใหญ่ (A-Z)
+              </label>
+              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded border border-slate-800 cursor-pointer">
+                <input type="checkbox" id="incLower" checked onchange="generatePassword()" class="accent-emerald-500"> พิมพ์เล็ก (a-z)
+              </label>
+              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded border border-slate-800 cursor-pointer">
+                <input type="checkbox" id="incNumbers" checked onchange="generatePassword()" class="accent-emerald-500"> ตัวเลข (0-9)
+              </label>
+              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded border border-slate-800 cursor-pointer">
+                <input type="checkbox" id="incSymbols" checked onchange="generatePassword()" class="accent-emerald-500"> สัญลักษณ์ (!@#$)
+              </label>
+            </div>
+
+            <button onclick="generatePassword()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold py-2 rounded-lg transition">⚡ สุ่มรหัสผ่านใหม่</button>
+          </div>
+          <textarea id="passOutput" readonly placeholder="กดปุ่มเพื่อสร้างรหัสผ่าน" class="w-full h-16 bg-slate-950/80 border border-emerald-500/30 rounded-lg p-2.5 text-base font-bold text-emerald-300 font-mono focus:outline-none text-center resize-none tracking-wider leading-relaxed"></textarea>
+        </div>
+        <button onclick="copyToClipboard('passOutput')" class="mt-3 w-full bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 py-1.5 rounded-lg border border-slate-700">📋 Copy Password</button>
+      </div>
+
+      <!-- Tool 3: Thai Passphrase to EN Password Generator (NEW & UPDATED!) -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <h2 class="text-base font-bold text-amber-400 flex items-center gap-2">
+              <span>🇹🇭 Thai Passphrase Password</span>
+            </h2>
+            <button onclick="randomThaiPassphrase()" class="text-xs bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 px-2.5 py-1 rounded border border-amber-500/30 transition">🎲 สุ่มประโยคไทย</button>
+          </div>
+          <p class="text-xs text-slate-400 mb-3">จำง่ายด้วยคำภาษาไทย แต่ได้ Password ภาษาอังกฤษตามตำแหน่งแป้นพิมพ์</p>
+          
+          <div class="space-y-3">
+            <div>
+              <label class="text-xs text-slate-400 block mb-1">ความหมายไทยที่ใช้จำ:</label>
+              <input type="text" id="thaiTextInput" oninput="convertThaiPassphrase()" placeholder="เช่น กาแฟร้อนยามเช้า123" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-amber-300 font-medium focus:outline-none focus:border-amber-500">
+            </div>
+
+            <div>
+              <label class="text-xs text-slate-400 block mb-1">Password ภาษาอังกฤษที่ได้ (ตามแป้นพิมพ์):</label>
+              <textarea id="thaiEnOutput" readonly placeholder="ผลลัพธ์รหัสผ่าน..." class="w-full h-16 bg-slate-950/80 border border-amber-500/30 rounded-lg p-2.5 text-base font-bold text-emerald-300 font-mono focus:outline-none text-center resize-none tracking-wider leading-relaxed"></textarea>
+            </div>
+          </div>
+        </div>
+        <button onclick="copyToClipboard('thaiEnOutput')" class="mt-3 w-full bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 py-1.5 rounded-lg border border-slate-700">📋 Copy Thai-Key Password</button>
+      </div>
+
+      <!-- Tool 4: URL Encoder / Decoder -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+        <div>
+          <h2 class="text-base font-bold text-purple-400 flex items-center gap-2 mb-3">
+            <span>🔗 URL Encode / Decode</span>
+          </h2>
+          <textarea id="urlInput" placeholder="วาง URL หรือ Query String ที่นี่..." class="w-full h-24 bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-purple-500 resize-none mb-3"></textarea>
+          <div class="flex gap-2 mb-3">
+            <button onclick="encodeURL()" class="flex-1 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold py-2 rounded-lg transition">Encode</button>
+            <button onclick="decodeURL()" class="flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold py-2 rounded-lg transition">Decode</button>
+          </div>
+          <textarea id="urlOutput" readonly placeholder="ผลลัพธ์จะปรากฏที่นี่..." class="w-full h-24 bg-slate-950/60 border border-slate-800/80 rounded-lg p-3 text-sm text-purple-300 font-mono resize-none focus:outline-none"></textarea>
+        </div>
+        <button onclick="copyToClipboard('urlOutput')" class="mt-3 w-full bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 py-1.5 rounded-lg border border-slate-700">📋 Copy Result</button>
+      </div>
+
+      <!-- Tool 5: Hash Generator (SHA-256 / SHA-512) -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between md:col-span-2">
+        <div>
+          <h2 class="text-base font-bold text-cyan-400 flex items-center gap-2 mb-3">
+            <span>#️⃣ Hash Generator (SHA-256 / SHA-512)</span>
+          </h2>
+          <input type="text" id="hashInput" oninput="generateHashes()" placeholder="พิมพ์ข้อความที่ต้องการทำ Hash ที่นี่..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 mb-3">
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
+            <div>
+              <span class="text-slate-400 block mb-1 font-sans">SHA-256:</span>
+              <input type="text" id="hashSHA256" readonly placeholder="SHA-256 Hash" class="w-full bg-slate-950/60 border border-slate-800/80 rounded p-2 text-cyan-300 focus:outline-none">
+            </div>
+            <div>
+              <span class="text-slate-400 block mb-1 font-sans">SHA-512:</span>
+              <input type="text" id="hashSHA512" readonly placeholder="SHA-512 Hash" class="w-full bg-slate-950/60 border border-slate-800/80 rounded p-2 text-cyan-300 focus:outline-none">
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2 mt-3">
+          <button onclick="copyToClipboard('hashSHA256')" class="bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 py-1.5 rounded border border-slate-700">Copy SHA256</button>
+          <button onclick="copyToClipboard('hashSHA512')" class="bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 py-1.5 rounded border border-slate-700">Copy SHA512</button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Clean JavaScript -->
+  <script>
+    // --- 1. Base64 Encoder / Decoder ---
+    function encodeBase64() {
+      const input = document.getElementById('base64Input').value;
+      if (!input) {
+        document.getElementById('base64Output').value = '';
+        return;
+      }
+      try {
+        const bytes = new TextEncoder().encode(input);
+        let binary = '';
+        bytes.forEach(b => binary += String.fromCharCode(b));
+        document.getElementById('base64Output').value = btoa(binary);
+      } catch (e) {
+        document.getElementById('base64Output').value = 'Error: ไม่สามารถ Encode ได้';
+      }
+    }
+
+    function decodeBase64() {
+      const input = document.getElementById('base64Input').value.trim();
+      if (!input) {
+        document.getElementById('base64Output').value = '';
+        return;
+      }
+      try {
+        const binary = atob(input);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        document.getElementById('base64Output').value = new TextDecoder().decode(bytes);
+      } catch (e) {
+        document.getElementById('base64Output').value = 'Error: รูปแบบ Base64 ไม่ถูกต้อง';
+      }
+    }
+
+    // --- 2. Random Password Generator ---
+    function generatePassword() {
+      const length = parseInt(document.getElementById('passLength').value) || 16;
+      const incUpper = document.getElementById('incUpper').checked;
+      const incLower = document.getElementById('incLower').checked;
+      const incNumbers = document.getElementById('incNumbers').checked;
+      const incSymbols = document.getElementById('incSymbols').checked;
+
+      let chars = '';
+      if (incUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      if (incLower) chars += 'abcdefghijklmnopqrstuvwxyz';
+      if (incNumbers) chars += '0123456789';
+      if (incSymbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+      if (!chars) {
+        document.getElementById('passOutput').value = 'กรุณาเลือกอย่างน้อย 1 ตัวเลือก';
+        return;
+      }
+
+      let password = '';
+      const array = new Uint32Array(length);
+      window.crypto.getRandomValues(array);
+      for (let i = 0; i < length; i++) {
+        password += chars.charAt(array[i] % chars.length);
+      }
+      document.getElementById('passOutput').value = password;
+    }
+
+    // --- 3. Thai Passphrase to EN Password Generator ---
+    const thaiToEnMap = {
+    // --- แถวตัวเลข (Unshifted & Shifted) ---
+    '_': '%', 'ภ': '4', 'ถ': '5', 'ุ': '6', 'ึ': '7', 'ค': '8', 'ต': '9', 'จ': '0', 'ข': '-', 'ช': '=',
+    '๛': '~', '๑': '!', '๒': '@', '๓': '#', '๔': '$', 'ู': '^', '฿': '&', '๕': '*', '๖': '(', '๗': ')', '๘': '_', '๙': '+',
+
+    // --- แถวบน (QWERTY) ---
+    'ๆ': 'q', 'ไ': 'w', 'ำ': 'e', 'พ': 'r', 'ะ': 't', 'ั': 'y', 'ี': 'u', 'ร': 'i', 'น': 'o', 'ย': 'p', 'บ': '[', 'ล': ']', 'ฃ': '\\',
+    'ํ': 'Q', 'ฆ': 'W', 'ฏ': 'E', 'โ': 'R', 'ฌ': 'T', '็': 'Y', '๋': 'U', 'ษ': 'I', 'ศ': 'O', 'ซ': 'P', 'ฅ': '{', 'ฤ': '}', 'ํ': '|',
+
+    // --- แถวกลาง (ASDFGH) ---
+    'ฟ': 'a', 'ห': 's', 'ก': 'd', 'ด': 'f', 'เ': 'g', '้': 'h', '่': 'j', 'า': 'k', 'ส': 'l', 'ว': ';', 'ง': '\'',
+    'ฤ': 'A', 'ฆ': 'S', 'ฏ': 'D', 'โ': 'F', 'ฌ': 'G', '็': 'H', '๋': 'J', 'ษ': 'K', 'ศ': 'L', 'ซ': ':', 'ง': '"',
+
+    // --- แถวล่าง (ZXCVBN) ---
+    'ผ': 'z', 'ป': 'x', 'แ': 'c', 'อ': 'v', 'ิ': 'b', 'ื': 'n', 'ท': 'm', 'ม': ',', 'ใ': '.', 'ฝ': '/',
+    'ผ': 'Z', 'ป': 'X', 'ฉ': 'C', 'ฮ': 'V', 'ฺ': 'B', '์': 'N', 'ฒ': 'M', 'ฬ': '<', 'ฃ': '>', 'ฝ': '?',
+    
+    ' ': ' '
+    };
+
+    const samplePhrases = [
+      "กาแฟร้อนยามเช้า123",
+      "ฝนตกหนักมากเมื่อวาน",
+      "แมวสีขาวนอนบนโต๊ะ",
+      "อยากไปเที่ยวทะเลจัง",
+      "กินข้าวผัดกุ้งอร่อยดี",
+      "ทำงานอย่างมีความสุข99",
+      "บ้านของเราอบอุ่นมาก",
+      "นอนหลับฝันดีคืนนี้"
+    ];
+
+    function convertThaiPassphrase() {
+      const input = document.getElementById('thaiTextInput').value;
+      let output = '';
+      for (let char of input) {
+        output += thaiToEnMap[char] !== undefined ? thaiToEnMap[char] : char;
+      }
+      document.getElementById('thaiEnOutput').value = output;
+    }
+
+    function randomThaiPassphrase() {
+      const randomIndex = Math.floor(Math.random() * samplePhrases.length);
+      const chosenPhrase = samplePhrases[randomIndex];
+      document.getElementById('thaiTextInput').value = chosenPhrase;
+      convertThaiPassphrase();
+    }
+
+    // --- 4. URL Encoder / Decoder ---
+    function encodeURL() {
+      const input = document.getElementById('urlInput').value;
+      if (!input) {
+        document.getElementById('urlOutput').value = '';
+        return;
+      }
+      document.getElementById('urlOutput').value = encodeURIComponent(input);
+    }
+
+    function decodeURL() {
+      const input = document.getElementById('urlInput').value.trim();
+      if (!input) {
+        document.getElementById('urlOutput').value = '';
+        return;
+      }
+      try {
+        document.getElementById('urlOutput').value = decodeURIComponent(input);
+      } catch (e) {
+        document.getElementById('urlOutput').value = 'Error: รูปแบบ URL ไม่ถูกต้อง';
+      }
+    }
+
+    // --- 5. Hash Generator (SHA-256 / SHA-512) ---
+    async function generateHashes() {
+      const text = document.getElementById('hashInput').value;
+      if (!text) {
+        document.getElementById('hashSHA256').value = '';
+        document.getElementById('hashSHA512').value = '';
+        return;
+      }
+
+      const encoder = new TextEncoder();
+      const data = encoder.encode(text);
+
+      try {
+        const buf256 = await crypto.subtle.digest('SHA-256', data);
+        document.getElementById('hashSHA256').value = Array.from(new Uint8Array(buf256)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+        const buf512 = await crypto.subtle.digest('SHA-512', data);
+        document.getElementById('hashSHA512').value = Array.from(new Uint8Array(buf512)).map(b => b.toString(16).padStart(2, '0')).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Helper Copy Function
+    function copyToClipboard(elementId) {
+      const text = document.getElementById(elementId).value;
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('คัดลอกเรียบร้อยแล้ว!');
+      });
+    }
+
+    // Auto run on start
+    window.onload = function() {
+      generatePassword();
+      randomThaiPassphrase();
+    };
+  </script>
+</body>
+</html>
