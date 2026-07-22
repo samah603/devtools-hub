@@ -3,6 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main"]
+  workflow_dispatch: # เปิดให้กดสั่ง Run Manual เองได้ด้วย
 
 permissions:
   contents: read
@@ -11,14 +12,12 @@ permissions:
 
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # ฉีด API Key จาก Repository Secrets ลงใน script.js
       - name: Inject API Key into script.js
         run: |
           sed -i "s/__GEMINI_API_KEY__/${{ secrets.GEMINI_API_KEY }}/g" script.js
