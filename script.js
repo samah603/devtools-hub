@@ -68,7 +68,7 @@ function generatePassword() {
 }
 
 // ==========================================
-// 3. Thai Passphrase to EN Password (Kedmanee Fixed)
+// 3. Thai Passphrase to EN Password (Kedmanee Fixed + AI Powered)
 // ==========================================
 const thaiToEnMap = {
   // --- แถวตัวเลข (Unshifted & Shifted) ---
@@ -111,11 +111,52 @@ function convertThaiPassphrase() {
   document.getElementById('thaiEnOutput').value = output;
 }
 
-function randomThaiPassphrase() {
+// สุ่มคำจาก Array ในเครื่อง (Fallback)
+function randomThaiPassphraseLocal() {
   const randomIndex = Math.floor(Math.random() * samplePhrases.length);
   const chosenPhrase = samplePhrases[randomIndex];
   document.getElementById('thaiTextInput').value = chosenPhrase;
   convertThaiPassphrase();
+}
+
+// ฟังก์ชันสุ่มประโยคหลัก (ลองใช้ Gemini AI ก่อน ถ้าไม่ได้จะใช้ Local)
+async function randomThaiPassphrase() {
+  const inputField = document.getElementById('thaiTextInput');
+
+  // ถ้ายังไม่ได้ตั้งค่า Key หรือเป็นค่า Placeholder ให้ใช้ Local สุ่มแทน
+  if (!GEMINI_API_KEY || GEMINI_API_KEY === "__GEMINI_API_KEY__") {
+    randomThaiPassphraseLocal();
+    return;
+  }
+
+  const originalValue = inputField.value;
+  inputField.value = "🤖 AI กำลังคิดประโยคจำง่ายๆ...";
+
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: "สร้างประโยคหรือวลีภาษาไทยสั้นๆ 1 ประโยค (ความยาว 3-5 คำ) สำหรับใช้ทำ Passphrase ที่จำง่าย มองเห็นภาพชัดเจน อาจมีตัวเลขต่อท้าย เช่น 'กาแฟร้อนยามเช้า123', 'แมวส้มนอนบนโต๊ะ99' ตอบมาเฉพาะตัวประโยคภาษาไทยเท่านั้น ไม่ต้องมีเครื่องหมายอัญประกาศหรือคำอธิบายเพิ่มเติม"
+          }]
+        }]
+      })
+    });
+
+    const data = await response.json();
+    if (data.candidates && data.candidates[0].content.parts[0].text) {
+      const aiPhrase = data.candidates[0].content.parts[0].text.trim();
+      inputField.value = aiPhrase;
+      convertThaiPassphrase();
+    } else {
+      throw new Error("API Response Error");
+    }
+  } catch (error) {
+    console.warn("Gemini API Error, switching to local phrases:", error);
+    randomThaiPassphraseLocal();
+  }
 }
 
 // ==========================================
