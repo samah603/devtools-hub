@@ -1,0 +1,19 @@
+/* Custom CSS Overrides */
+textarea {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 #0f172a;
+}
+
+/* Custom Scrollbar for Webkit Browsers */
+textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background-color: #334155;
+  border-radius: 4px;
+}
