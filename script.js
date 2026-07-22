@@ -120,16 +120,18 @@ function randomThaiPassphraseLocal() {
 }
 
 // ฟังก์ชันสุ่มประโยคหลัก (ลองใช้ Gemini AI ก่อน ถ้าไม่ได้จะใช้ Local)
+// Thai Passphrase to EN Password (Kedmanee Fixed + AI Powered)
 async function randomThaiPassphrase() {
   const inputField = document.getElementById('thaiTextInput');
 
-  // ถ้ายังไม่ได้ตั้งค่า Key หรือเป็นค่า Placeholder ให้ใช้ Local สุ่มแทน
+  // เช็กว่า Key ถูก Inject มาหรือยัง
   if (!GEMINI_API_KEY || GEMINI_API_KEY === "__GEMINI_API_KEY__") {
+    console.warn("⚠️ [DevTools Hub] ยังไม่มีการตั้งค่า GEMINI_API_KEY ระบบจะสลับไปใช้ Local Fallback");
     randomThaiPassphraseLocal();
     return;
   }
 
-  const originalValue = inputField.value;
+  console.log("🚀 [DevTools Hub] กำลังส่งคำขอไปยัง Gemini API...");
   inputField.value = "🤖 AI กำลังคิดประโยคจำง่ายๆ...";
 
   try {
@@ -146,15 +148,22 @@ async function randomThaiPassphrase() {
     });
 
     const data = await response.json();
+    
+    if (data.error) {
+      console.error("❌ [Gemini API Error Response]:", data.error);
+      throw new Error(data.error.message);
+    }
+
     if (data.candidates && data.candidates[0].content.parts[0].text) {
       const aiPhrase = data.candidates[0].content.parts[0].text.trim();
+      console.log("✅ [Gemini API Success]: ได้รับประโยค ->", aiPhrase);
       inputField.value = aiPhrase;
       convertThaiPassphrase();
     } else {
-      throw new Error("API Response Error");
+      throw new Error("API Response Structure Invalid");
     }
   } catch (error) {
-    console.warn("Gemini API Error, switching to local phrases:", error);
+    console.warn("⚠️ เกิดข้อผิดพลาดในการเรียก Gemini API สลับไปใช้ Local Phrases:", error);
     randomThaiPassphraseLocal();
   }
 }
