@@ -68,36 +68,27 @@ function generatePassword() {
 }
 
 // ==========================================
-// 3. Thai Passphrase to EN Password (Kedmanee Fixed + AI Powered)
+// 3. Thai Passphrase to EN Password
 // ==========================================
 const thaiToEnMap = {
-  // --- แถวตัวเลข (Unshifted & Shifted) ---
   '_': '%', 'ภ': '4', 'ถ': '5', 'ุ': '6', 'ึ': '7', 'ค': '8', 'ต': '9', 'จ': '0', 'ข': '-', 'ช': '=',
   '๛': '~', '๑': '!', '๒': '@', '๓': '#', '๔': '$', 'ู': '^', '฿': '&', '๕': '*', '๖': '(', '๗': ')', '๘': '_', '๙': '+',
-
-  // --- แถวบน (QWERTY) ---
   'ๆ': 'q', 'ไ': 'w', 'ำ': 'e', 'พ': 'r', 'ะ': 't', 'ั': 'y', 'ี': 'u', 'ร': 'i', 'น': 'o', 'ย': 'p', 'บ': '[', 'ล': ']', 'ฃ': '\\',
   'ํ': 'Q', 'ฆ': 'W', 'ฏ': 'E', 'โ': 'R', 'ฌ': 'T', '็': 'Y', '๋': 'U', 'ษ': 'I', 'ศ': 'O', 'ซ': 'P', 'ฅ': '{', 'ฤ': '}',
-
-  // --- แถวกลาง (ASDFGH) ---
   'ฟ': 'a', 'ห': 's', 'ก': 'd', 'ด': 'f', 'เ': 'g', '้': 'h', '่': 'j', 'า': 'k', 'ส': 'l', 'ว': ';', 'ง': '\'',
   'ฤ': 'A', 'ฆ': 'S', 'ฏ': 'D', 'โ': 'F', 'ฌ': 'G', '็': 'H', '๋': 'J', 'ษ': 'K', 'ศ': 'L', 'ซ': ':', 'ง': '"',
-
-  // --- แถวล่าง (ZXCVBN) ---
   'ผ': 'z', 'ป': 'x', 'แ': 'c', 'อ': 'v', 'ิ': 'b', 'ื': 'n', 'ท': 'm', 'ม': ',', 'ใ': '.', 'ฝ': '/',
   'ผ': 'Z', 'ป': 'X', 'ฉ': 'C', 'ฮ': 'V', 'ฺ': 'B', '์': 'N', 'ฒ': 'M', 'ฬ': '<', 'ฃ': '>', 'ฝ': '?',
-  
   ' ': ' '
 };
 
 const samplePhrases = [
   "กระโดดให้สูงขึ้นไป",
-  "กาแฟร้อนยามเช้า123",
+  "แมวสีขาวนอนบนโต๊ะ99",
   "ฝนตกหนักมากเมื่อวาน",
-  "แมวสีขาวนอนบนโต๊ะ",
-  "อยากไปเที่ยวทะเลจัง",
+  "อยากไปเที่ยวทะเลจัง555",
   "กินข้าวผัดกุ้งอร่อยดี",
-  "ทำงานอย่างมีความสุข99",
+  "ทำงานอย่างมีความสุข2026",
   "บ้านของเราอบอุ่นมาก",
   "นอนหลับฝันดีคืนนี้"
 ];
@@ -111,59 +102,56 @@ function convertThaiPassphrase() {
   document.getElementById('thaiEnOutput').value = output;
 }
 
-// สุ่มคำจาก Array ในเครื่อง (Fallback)
 function randomThaiPassphraseLocal() {
+  console.log("🎲 [Local Fallback] กำลังสุ่มคำจากในเครื่อง...");
   const randomIndex = Math.floor(Math.random() * samplePhrases.length);
   const chosenPhrase = samplePhrases[randomIndex];
   document.getElementById('thaiTextInput').value = chosenPhrase;
   convertThaiPassphrase();
 }
 
-// ฟังก์ชันสุ่มประโยคหลัก (ลองใช้ Gemini AI ก่อน ถ้าไม่ได้จะใช้ Local)
-// Thai Passphrase to EN Password (Kedmanee Fixed + AI Powered)
 async function randomThaiPassphrase() {
+  console.log("🔘 ปุ่ม 'สุ่มประโยคไทย' ถูกกดเรียบร้อย!");
   const inputField = document.getElementById('thaiTextInput');
 
-  // เช็กว่า Key ถูก Inject มาหรือยัง
+  // ตรวจสอบว่า Key ถูกแทนที่จาก GitHub Secrets หรือยัง
   if (!GEMINI_API_KEY || GEMINI_API_KEY === "__GEMINI_API_KEY__") {
-    console.warn("⚠️ [DevTools Hub] ยังไม่มีการตั้งค่า GEMINI_API_KEY ระบบจะสลับไปใช้ Local Fallback");
+    console.warn("⚠️ ไม่พบ GEMINI_API_KEY (หรือยังเป็น Placeholder) -> สลับไปใช้ Local Fallback");
     randomThaiPassphraseLocal();
     return;
   }
 
-  console.log("🚀 [DevTools Hub] กำลังส่งคำขอไปยัง Gemini API...");
+  console.log("🚀 กำลังส่งคำขอไปยัง Gemini API...");
   inputField.value = "🤖 AI กำลังคิดประโยคจำง่ายๆ...";
 
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    
+    const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{
           parts: [{
-            text: "สร้างประโยคหรือวลีภาษาไทยสั้นๆ 1 ประโยค (ความยาว 3-5 คำ) สำหรับใช้ทำ Passphrase ที่จำง่าย มองเห็นภาพชัดเจน อาจมีตัวเลขต่อท้าย เช่น 'กาแฟร้อนยามเช้า123', 'แมวส้มนอนบนโต๊ะ99' ตอบมาเฉพาะตัวประโยคภาษาไทยเท่านั้น ไม่ต้องมีเครื่องหมายอัญประกาศหรือคำอธิบายเพิ่มเติม"
+            text: "สร้างประโยคหรือวลีภาษาไทยสั้นๆ 1 ประโยค (ความยาว 3-5 คำ) สำหรับทำ Passphrase จำง่าย อาจมีตัวเลขต่อท้าย เช่น 'กาแฟร้อนยามเช้า123', 'แมวส้มนอนบนโต๊ะ99' ตอบมาเฉพาะตัวประโยคภาษาไทยเท่านั้น ห้ามมีเครื่องหมายอัญประกาศ"
           }]
         }]
       })
     });
 
     const data = await response.json();
-    
-    if (data.error) {
-      console.error("❌ [Gemini API Error Response]:", data.error);
-      throw new Error(data.error.message);
-    }
+    console.log("📡 [Gemini API Response]:", data);
 
     if (data.candidates && data.candidates[0].content.parts[0].text) {
       const aiPhrase = data.candidates[0].content.parts[0].text.trim();
-      console.log("✅ [Gemini API Success]: ได้รับประโยค ->", aiPhrase);
+      console.log("✅ ได้รับประโยคจาก AI:", aiPhrase);
       inputField.value = aiPhrase;
       convertThaiPassphrase();
     } else {
-      throw new Error("API Response Structure Invalid");
+      throw new Error("Invalid Response Structure");
     }
   } catch (error) {
-    console.warn("⚠️ เกิดข้อผิดพลาดในการเรียก Gemini API สลับไปใช้ Local Phrases:", error);
+    console.error("❌ เกิดข้อผิดพลาดในการดึงข้อมูลจาก Gemini API:", error);
     randomThaiPassphraseLocal();
   }
 }
@@ -194,7 +182,7 @@ function decodeURL() {
 }
 
 // ==========================================
-// 5. Hash Generator (Native Web Crypto API)
+// 5. Hash Generator
 // ==========================================
 async function generateHashes() {
   const text = document.getElementById('hashInput').value;
@@ -231,6 +219,7 @@ function copyToClipboard(elementId) {
 
 // Initial setup on window load
 window.onload = function() {
+  console.log("🌐 [DevTools Hub] Script loaded and initialized.");
   generatePassword();
   randomThaiPassphrase();
 };
